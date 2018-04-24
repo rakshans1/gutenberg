@@ -156,6 +156,10 @@ class MediaUpload extends Component {
 	}
 
 	onOpen() {
+		// force update of the media library in case a new attachment was added since the last time we used it.
+		// the prop is not used but given that the value always changes the refresh happens.
+		this.frame.content.get().collection.props.set( { ignore_force_update: new Date() } );
+
 		if ( ! this.props.value ) {
 			return;
 		}
