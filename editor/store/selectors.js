@@ -1060,7 +1060,7 @@ export function isValidTemplate( state ) {
  * @return {?Arary}        Block Template
  */
 export function getTemplate( state ) {
-	return state.template.template;
+	return state.settings.template;
 }
 
 /**
@@ -1070,7 +1070,7 @@ export function getTemplate( state ) {
  * @return {?string}        Block Template Lock
  */
 export function getTemplateLock( state ) {
-	return state.template.lock;
+	return state.settings.templateLock;
 }
 
 /**
@@ -1612,4 +1612,15 @@ export function getSupportedBlocks( state, uid, globallyEnabledBlockTypes ) {
 		return supportedNestedBlocks;
 	}
 	return intersection( globallyEnabledBlockTypes, supportedNestedBlocks );
+}
+
+/*
+ * Returns the editor settings.
+ *
+ * @param {Object} state Editor state.
+ *
+ * @return {Object} The editor settings object
+ */
+export function getEditorSettings( state ) {
+	return state.settings;
 }

@@ -3150,7 +3150,7 @@ describe( 'selectors', () => {
 		it( 'should return the template object', () => {
 			const template = [];
 			const state = {
-				template: { isValid: true, template },
+				settings: { template },
 			};
 
 			expect( getTemplate( state ) ).toBe( template );
@@ -3160,7 +3160,7 @@ describe( 'selectors', () => {
 	describe( 'getTemplateLock', () => {
 		it( 'should return the template object', () => {
 			const state = {
-				template: { isValid: true, lock: 'all' },
+				settings: { templateLock: 'all' },
 			};
 
 			expect( getTemplateLock( state ) ).toBe( 'all' );
