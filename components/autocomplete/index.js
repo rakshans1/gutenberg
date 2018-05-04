@@ -226,15 +226,39 @@ export class Autocomplete extends Component {
 	}
 
 	insertCompletion( range, replacement ) {
-		const container = document.createElement( 'div' );
-		container.innerHTML = renderToString( replacement );
-		while ( container.firstChild ) {
-			const child = container.firstChild;
-			container.removeChild( child );
-			range.insertNode( child );
-			range.setStartAfter( child );
-		}
+		// Wrap completions so we can treat them as tokens.
+		const tokenWrapper = document.createElement( 'span' );
+		tokenWrapper.classList.add( 'autocomplete-token' );
+
+		// Make tokens non-editable so they may be deleted but not modified.
+		tokenWrapper.contentEditable = false;
+
+		tokenWrapper.innerHTML = renderToString( replacement );
+
+		range.insertNode( tokenWrapper );
+		range.setStartAfter( tokenWrapper );
 		range.deleteContents();
+
+		/*
+		 * Add non-breaking space after a completion because:
+		 * 1. If the inserted token is the last child in Chrome 66 and desktop Safari 11,
+		 *    we can set the cursor after the token and receive user input,
+		 *    but if the input isn't preceded by a space, the user may not place the
+		 *    cursor within the text by clicking. Adding a subsequent non-breaking space
+		 *    avoids this issue. A regular space is insufficient.
+		 * 2. It seems reasonable to separate a token from subsequent text with a space.
+		 */
+		tokenWrapper.parentNode.insertBefore(
+			document.createTextNode( '\u00A0' ),
+			tokenWrapper.nextSibling
+		);
+
+		const selection = window.getSelection();
+		selection.removeAllRanges();
+
+		const newCursorPosition = document.createRange();
+		newCursorPosition.setStartAfter( tokenWrapper.nextSibling );
+		selection.addRange( newCursorPosition );
 	}
 
 	select( option ) {
