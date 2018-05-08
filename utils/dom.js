@@ -7,8 +7,25 @@ import tinymce from 'tinymce';
 /**
  * Browser dependencies
  */
-const { getComputedStyle, DOMRect } = window;
+const { getComputedStyle } = window;
 const { TEXT_NODE, ELEMENT_NODE } = window.Node;
+
+// Export for unit test
+export const DOMRectPolyfill = class DOMRect {
+	constructor( x, y, width, height ) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.left = x + Math.min( 0, width );
+		this.right = x + Math.max( 0, width );
+		this.top = y + Math.min( 0, height );
+		this.bottom = y + Math.max( 0, height );
+	}
+};
+
+// DOMRect isn't provided in IE, so we have to polyfill.
+const DOMRect = window.DOMRect || DOMRectPolyfill;
 
 /**
  * Check whether the caret is horizontally at the edge of the container.
